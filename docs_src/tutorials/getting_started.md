@@ -14,21 +14,13 @@ Depending on your kernel version, you could need to modprobe the module intel_ra
 
 To quickly run scaphandre in your terminal you may use [docker](https://www.docker.com/):
 
-    docker run -v /sys/class/powercap:/sys/class/powercap -v /proc:/proc -ti hubblo/scaphandre stdout -t 15
+    docker run --privileged -v /sys/class/powercap:/sys/class/powercap -v /proc:/proc -ti hubblo/scaphandre stdout -t 15
+
+To run scaphandre you need to run the contaner in **privileged** mode since it is needed to access `/proc` files.
 
 Or if you downloaded or built a binary, you'd run:
 
     scaphandre stdout -t 15
-
-## Running scaphandre on Fedora / CentOS Stream / RHEL (or any distribution using SELinux) with podman
-
-Running scaphandre with podman on a distribution using SELinux may fail because of access denied to `/proc` files.
-
-To make it work you should run scaphandre in privileged mode :
-
-    podman run --privileged ...
-
-You'll find explanation of this requirement here : [#106](https://github.com/hubblo-org/scaphandre/issues/106).
 
 ## Output
 
@@ -60,7 +52,7 @@ At that point, you're ready to use scaphandre. The Stdout exporter is very basic
 
 The [prometheus exporter](../references/exporter-prometheus.md), for example, allows you to expose power consumption metrics as an HTTP endpoint that can be scrapped by a [prometheus](https://prometheus.io) instance:
 
-    docker run -v /sys/class/powercap:/sys/class/powercap -v /proc:/proc -p 8080:8080 -ti hubblo/scaphandre prometheus
+    docker run --privileged -v /sys/class/powercap:/sys/class/powercap -v /proc:/proc -p 8080:8080 -ti hubblo/scaphandre prometheus
 
 Here is the same command with a simple binary:
 
